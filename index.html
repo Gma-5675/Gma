@@ -6,576 +6,110 @@
 <title>⚡ Проклятая Битва</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Rajdhani:wght@500;700&display=swap');
-
 :root {
-  --bg: #050a0f;
-  --panel: #0c1520;
-  --border: #1a3a5c;
-  --accent: #00d4ff;
-  --red: #ff2244;
-  --purple: #9b30ff;
-  --gold: #ffcc00;
-  --green: #00ff88;
-  --text: #c8dde8;
-  --muted: #4a6b80;
+  --bg:#050a0f;--panel:#0c1520;--border:#1a3a5c;
+  --accent:#00d4ff;--red:#ff2244;--purple:#9b30ff;
+  --gold:#ffcc00;--green:#00ff88;--text:#c8dde8;--muted:#4a6b80;
 }
-
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-body::before {
-  content:'';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(155,48,255,0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 60% at 80% 80%, rgba(0,212,255,0.05) 0%, transparent 70%),
-    radial-gradient(ellipse 30% 30% at 50% 50%, rgba(255,34,68,0.04) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.particle {
-  position: fixed;
-  width: 2px; height: 2px;
-  background: var(--accent);
-  border-radius: 50%;
-  opacity: 0;
-  pointer-events: none;
-  animation: floatUp linear infinite;
-  z-index: 0;
-}
-
-@keyframes floatUp {
-  0% { transform: translateY(100vh) scale(1); opacity: 0; }
-  10% { opacity: 0.6; }
-  90% { opacity: 0.2; }
-  100% { transform: translateY(-20px) scale(0); opacity: 0; }
-}
-
-#app {
-  position: relative;
-  z-index: 1;
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0 0 80px 0;
-}
-
-/* ── HEADER ── */
-#header {
-  background: linear-gradient(180deg, #080f17 0%, var(--panel) 100%);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 16px 10px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-#header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-#title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.1em;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--accent);
-  text-shadow: 0 0 20px rgba(0,212,255,0.5);
-}
-
-#level-badge {
-  background: linear-gradient(135deg, var(--purple), #5500aa);
-  border: 1px solid rgba(155,48,255,0.5);
-  border-radius: 20px;
-  padding: 3px 10px;
-  font-size: 0.75em;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: white;
-}
-
-#energy-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-#energy-icon {
-  font-size: 1.4em;
-  animation: energyPulse 2s ease-in-out infinite;
-}
-
-@keyframes energyPulse {
-  0%,100% { filter: drop-shadow(0 0 4px var(--accent)); }
-  50% { filter: drop-shadow(0 0 12px var(--accent)); }
-}
-
-#energy-amount {
-  font-family: 'Cinzel', serif;
-  font-size: 1.8em;
-  font-weight: 900;
-  color: var(--accent);
-  text-shadow: 0 0 15px rgba(0,212,255,0.4);
-  min-width: 120px;
-}
-
-#stats-mini {
-  display: flex;
-  gap: 14px;
-  margin-left: auto;
-}
-
-.stat-mini { text-align: center; }
-.stat-mini .val { display: block; font-size: 1em; font-weight: 700; color: var(--green); }
-.stat-mini .lbl { font-size: 0.65em; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
-
-/* Sync indicator */
-#sync-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.65em;
-  color: var(--muted);
-  letter-spacing: 1px;
-  margin-bottom: 6px;
-}
-
-#sync-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--muted);
-  transition: background 0.3s;
-}
-
-#sync-dot.syncing { background: var(--gold); animation: syncPulse 0.8s ease-in-out infinite; }
-#sync-dot.synced { background: var(--green); }
-#sync-dot.error { background: var(--red); }
-
-@keyframes syncPulse {
-  0%,100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-#xp-bar-wrap {
-  height: 4px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-#xp-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--purple), var(--accent));
-  border-radius: 2px;
-  transition: width 0.4s ease;
-  box-shadow: 0 0 8px rgba(0,212,255,0.5);
-}
-
-#xp-text {
-  font-size: 0.65em;
-  color: var(--muted);
-  text-align: right;
-  margin-top: 2px;
-  letter-spacing: 1px;
-}
-
-/* ── CLICKER ── */
-#clicker-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 16px 16px;
-  gap: 12px;
-}
-
-/* Name input */
-#name-row {
-  width: 100%;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-#player-name-input {
-  flex: 1;
-  background: rgba(0,212,255,0.05);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 12px;
-  color: white;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.9em;
-  font-weight: 700;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-#player-name-input:focus { border-color: var(--accent); }
-
-#name-save-btn {
-  background: linear-gradient(135deg, var(--accent), var(--purple));
-  border: none;
-  border-radius: 8px;
-  padding: 8px 14px;
-  color: white;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.85em;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: 1px;
-  transition: opacity 0.2s;
-}
-
-#name-save-btn:active { opacity: 0.7; }
-
-#quote-box {
-  width: 100%;
-  background: rgba(0,212,255,0.04);
-  border: 1px solid rgba(0,212,255,0.15);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 10px 14px;
-  font-size: 0.85em;
-  font-style: italic;
-  color: rgba(200,221,232,0.7);
-  line-height: 1.4;
-}
-
-#quote-box .quote-author {
-  color: var(--accent);
-  font-style: normal;
-  font-size: 0.9em;
-  margin-top: 4px;
-  font-weight: 700;
-}
-
-#orb-wrap {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  cursor: pointer;
-}
-
-#orb {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%,
-    rgba(0,212,255,0.3) 0%,
-    rgba(155,48,255,0.2) 40%,
-    rgba(5,10,15,0.9) 100%
-  );
-  border: 2px solid rgba(0,212,255,0.4);
-  box-shadow:
-    0 0 40px rgba(0,212,255,0.15),
-    0 0 80px rgba(155,48,255,0.1),
-    inset 0 0 40px rgba(0,212,255,0.05);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 80px;
-  transition: transform 0.1s;
-  animation: orbFloat 3s ease-in-out infinite;
-  position: relative;
-  overflow: hidden;
-}
-
-#orb::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent 0%, rgba(0,212,255,0.3) 20%, transparent 40%);
-  animation: orbSpin 4s linear infinite;
-}
-
-@keyframes orbSpin { to { transform: rotate(360deg); } }
-@keyframes orbFloat {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-#orb:active { transform: scale(0.93) !important; }
-
-#orb-rings {
-  position: absolute;
-  inset: -20px;
-  border-radius: 50%;
-  border: 1px solid rgba(0,212,255,0.1);
-  animation: ringExpand 2s ease-out infinite;
-}
-
-@keyframes ringExpand {
-  0% { transform: scale(0.9); opacity: 0.5; }
-  100% { transform: scale(1.1); opacity: 0; }
-}
-
-.click-pop {
-  position: absolute;
-  pointer-events: none;
-  font-family: 'Cinzel', serif;
-  font-weight: 900;
-  font-size: 1.1em;
-  color: var(--accent);
-  text-shadow: 0 0 10px var(--accent);
-  animation: popFloat 0.9s ease forwards;
-  z-index: 50;
-  white-space: nowrap;
-}
-
-@keyframes popFloat {
-  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
-  20% { transform: translate(-50%, -80%) scale(1.2); }
-  100% { opacity: 0; transform: translate(-50%, -200%) scale(0.8); }
-}
-
-/* ── TABS ── */
-#tabs {
-  display: flex;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  background: var(--panel);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-#tabs::-webkit-scrollbar { display: none; }
-
-.tab-btn {
-  flex: 1;
-  min-width: 80px;
-  padding: 10px 6px;
-  border: none;
-  background: transparent;
-  color: var(--muted);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.75em;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-}
-
-.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); background: rgba(0,212,255,0.05); }
-.tab-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.03); }
-
-/* ── SHOP ── */
-.shop { padding: 12px; display: none; }
-
-.shop-section-title {
-  font-family: 'Cinzel', serif;
-  font-size: 0.95em;
-  font-weight: 700;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.shop-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.shop-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 10px;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-
-.shop-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(0,212,255,0.05) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.shop-card:hover::before, .shop-card:active::before { opacity: 1; }
-.shop-card:hover { border-color: rgba(0,212,255,0.3); transform: translateY(-1px); }
-.shop-card:active { transform: scale(0.97); }
-
-.shop-card.cant-afford { opacity: 0.5; cursor: not-allowed; }
-.shop-card.cant-afford:hover { transform: none; border-color: var(--border); }
-
-.rarity-badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  font-size: 0.6em;
-  font-weight: 700;
-  letter-spacing: 1px;
-  padding: 1px 5px;
-  border-radius: 3px;
-}
-
-.rarity-common { color: #aaa; background: rgba(170,170,170,0.1); border: 1px solid #444; }
-.rarity-rare { color: #4af; background: rgba(68,170,255,0.1); border: 1px solid #4af; }
-.rarity-epic { color: var(--purple); background: rgba(155,48,255,0.1); border: 1px solid var(--purple); }
-.rarity-legendary { color: var(--gold); background: rgba(255,204,0,0.1); border: 1px solid var(--gold); }
-
-.shop-icon { font-size: 2em; margin-bottom: 4px; display: block; }
-.shop-name { font-weight: 700; font-size: 0.9em; color: white; margin-bottom: 2px; line-height: 1.2; }
-.shop-bonus { font-size: 0.8em; color: var(--green); margin-bottom: 6px; font-weight: 700; }
-.shop-price { display: flex; align-items: center; gap: 4px; font-size: 0.85em; font-weight: 700; color: var(--accent); }
-.shop-level-dots { display: flex; gap: 3px; margin-top: 6px; }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
-.dot.filled { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 4px var(--accent); }
-
-/* ── LEADERBOARD ── */
-#leaderboard { padding: 12px; display: none; }
-
-.leader-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.leader-header-title {
-  font-family: 'Cinzel', serif;
-  font-size: 0.95em;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--gold);
-}
-
-#refresh-btn {
-  background: rgba(0,212,255,0.1);
-  border: 1px solid rgba(0,212,255,0.3);
-  border-radius: 6px;
-  padding: 4px 10px;
-  color: var(--accent);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.75em;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: 1px;
-  transition: all 0.2s;
-}
-
-#refresh-btn:hover { background: rgba(0,212,255,0.2); }
-#refresh-btn:active { transform: scale(0.95); }
-
-.leader-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  margin-bottom: 8px;
-  transition: all 0.2s;
-}
-
-.leader-row:hover { border-color: rgba(0,212,255,0.3); }
-.leader-row.is-you { border-color: var(--accent); background: rgba(0,212,255,0.05); }
-
-.leader-rank {
-  font-family: 'Cinzel', serif;
-  font-size: 1.2em;
-  font-weight: 900;
-  min-width: 28px;
-  text-align: center;
-}
-
-.rank-1 { color: var(--gold); text-shadow: 0 0 10px rgba(255,204,0,0.5); }
-.rank-2 { color: #aaa; }
-.rank-3 { color: #cd7f32; }
-
-.leader-name { flex: 1; font-size: 1em; font-weight: 700; color: white; }
-.leader-score { font-size: 0.95em; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 4px; }
-.leader-level { font-size: 0.7em; color: var(--muted); margin-top: 2px; }
-
-.leaders-loading {
-  text-align: center;
-  padding: 30px;
-  color: var(--muted);
-  font-size: 0.9em;
-  letter-spacing: 2px;
-}
-
-#tap-hint {
-  text-align: center;
-  font-size: 0.75em;
-  color: var(--muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  animation: hintBlink 2s ease-in-out infinite;
-}
-
-@keyframes hintBlink {
-  0%,100% { opacity: 0.4; }
-  50% { opacity: 0.9; }
-}
-
-#toast {
-  position: fixed;
-  bottom: 90px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: rgba(0,212,255,0.15);
-  border: 1px solid var(--accent);
-  border-radius: 20px;
-  padding: 8px 18px;
-  font-size: 0.85em;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 1px;
-  opacity: 0;
-  transition: all 0.3s;
-  z-index: 200;
-  pointer-events: none;
-  white-space: nowrap;
-}
-
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-.screen-flash {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 300;
-  animation: flashFade 0.4s ease forwards;
-}
-
-@keyframes flashFade {
-  0% { background: rgba(0,212,255,0.15); }
-  100% { background: transparent; }
-}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 20%,rgba(155,48,255,.06) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 80% 80%,rgba(0,212,255,.05) 0%,transparent 70%);pointer-events:none;z-index:0}
+.particle{position:fixed;width:2px;height:2px;border-radius:50%;opacity:0;pointer-events:none;animation:floatUp linear infinite;z-index:0}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(1);opacity:0}10%{opacity:.6}90%{opacity:.2}100%{transform:translateY(-20px) scale(0);opacity:0}}
+#app{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 0 80px}
+#header{background:linear-gradient(180deg,#080f17 0%,var(--panel) 100%);border-bottom:1px solid var(--border);padding:14px 16px 10px;position:sticky;top:0;z-index:100}
+#header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+#title{font-family:'Cinzel',serif;font-size:1.1em;font-weight:900;letter-spacing:3px;color:var(--accent);text-shadow:0 0 20px rgba(0,212,255,.5)}
+#level-badge{background:linear-gradient(135deg,var(--purple),#5500aa);border:1px solid rgba(155,48,255,.5);border-radius:20px;padding:3px 10px;font-size:.75em;font-weight:700;letter-spacing:1px;color:white}
+#energy-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+#energy-icon{font-size:1.4em;animation:energyPulse 2s ease-in-out infinite}
+@keyframes energyPulse{0%,100%{filter:drop-shadow(0 0 4px var(--accent))}50%{filter:drop-shadow(0 0 12px var(--accent))}}
+#energy-amount{font-family:'Cinzel',serif;font-size:1.8em;font-weight:900;color:var(--accent);text-shadow:0 0 15px rgba(0,212,255,.4);min-width:100px}
+#stats-mini{display:flex;gap:14px;margin-left:auto}
+.stat-mini{text-align:center}
+.stat-mini .val{display:block;font-size:1em;font-weight:700;color:var(--green)}
+.stat-mini .lbl{font-size:.65em;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+#sync-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:.65em;color:var(--muted);letter-spacing:1px}
+#sync-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .3s}
+#sync-dot.syncing{background:var(--gold);animation:blink .7s infinite}
+#sync-dot.ok{background:var(--green)}
+#sync-dot.err{background:var(--red)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+#xp-bar-wrap{height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+#xp-bar{height:100%;background:linear-gradient(90deg,var(--purple),var(--accent));border-radius:2px;transition:width .4s ease;box-shadow:0 0 8px rgba(0,212,255,.5)}
+#xp-text{font-size:.65em;color:var(--muted);text-align:right;margin-top:2px;letter-spacing:1px}
+#clicker-area{display:flex;flex-direction:column;align-items:center;padding:16px;gap:10px}
+#name-row{width:100%;display:flex;gap:8px}
+#player-name-input{flex:1;background:rgba(0,212,255,.05);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:white;font-family:'Rajdhani',sans-serif;font-size:.9em;font-weight:700;outline:none;transition:border-color .2s}
+#player-name-input:focus{border-color:var(--accent)}
+#name-save-btn{background:linear-gradient(135deg,var(--accent),var(--purple));border:none;border-radius:8px;padding:8px 14px;color:white;font-family:'Rajdhani',sans-serif;font-size:.85em;font-weight:700;cursor:pointer;letter-spacing:1px}
+#name-save-btn:active{opacity:.7}
+#quote-box{width:100%;background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.15);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;font-size:.85em;font-style:italic;color:rgba(200,221,232,.7);line-height:1.4}
+#quote-box .qa{color:var(--accent);font-style:normal;font-size:.9em;margin-top:4px;font-weight:700}
+#orb-wrap{position:relative;width:200px;height:200px;cursor:pointer}
+#orb{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(0,212,255,.3) 0%,rgba(155,48,255,.2) 40%,rgba(5,10,15,.9) 100%);border:2px solid rgba(0,212,255,.4);box-shadow:0 0 40px rgba(0,212,255,.15),0 0 80px rgba(155,48,255,.1),inset 0 0 40px rgba(0,212,255,.05);display:flex;align-items:center;justify-content:center;font-size:80px;transition:transform .1s;animation:orbFloat 3s ease-in-out infinite;position:relative;overflow:hidden}
+#orb::before{content:'';position:absolute;inset:-2px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0%,rgba(0,212,255,.3) 20%,transparent 40%);animation:orbSpin 4s linear infinite}
+@keyframes orbSpin{to{transform:rotate(360deg)}}
+@keyframes orbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+#orb:active{transform:scale(.93)!important}
+#orb-rings{position:absolute;inset:-20px;border-radius:50%;border:1px solid rgba(0,212,255,.1);animation:ringExpand 2s ease-out infinite}
+@keyframes ringExpand{0%{transform:scale(.9);opacity:.5}100%{transform:scale(1.1);opacity:0}}
+.click-pop{position:absolute;pointer-events:none;font-family:'Cinzel',serif;font-weight:900;font-size:1.1em;color:var(--accent);text-shadow:0 0 10px var(--accent);animation:popFloat .9s ease forwards;z-index:50;white-space:nowrap}
+@keyframes popFloat{0%{opacity:1;transform:translate(-50%,-50%) scale(.5)}20%{transform:translate(-50%,-80%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-200%) scale(.8)}}
+#tap-hint{text-align:center;font-size:.75em;color:var(--muted);letter-spacing:2px;text-transform:uppercase;animation:hintBlink 2s ease-in-out infinite}
+@keyframes hintBlink{0%,100%{opacity:.4}50%{opacity:.9}}
+#tabs{display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--panel);overflow-x:auto;scrollbar-width:none}
+#tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:1;min-width:80px;padding:10px 6px;border:none;background:transparent;color:var(--muted);font-family:'Rajdhani',sans-serif;font-size:.75em;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;white-space:nowrap}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,212,255,.05)}
+.shop{padding:12px;display:none}
+.sec-title{font-family:'Cinzel',serif;font-size:.95em;font-weight:700;letter-spacing:2px;margin-bottom:10px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.shop-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 10px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.shop-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,.05) 0%,transparent 60%);opacity:0;transition:opacity .2s}
+.shop-card:hover::before,.shop-card:active::before{opacity:1}
+.shop-card:hover{border-color:rgba(0,212,255,.3);transform:translateY(-1px)}
+.shop-card:active{transform:scale(.97)}
+.shop-card.no-gold{opacity:.5;cursor:not-allowed}
+.shop-card.no-gold:hover{transform:none;border-color:var(--border)}
+.rb{position:absolute;top:8px;right:8px;font-size:.6em;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:3px}
+.rc{color:#aaa;background:rgba(170,170,170,.1);border:1px solid #444}
+.rr{color:#4af;background:rgba(68,170,255,.1);border:1px solid #4af}
+.re{color:var(--purple);background:rgba(155,48,255,.1);border:1px solid var(--purple)}
+.rl{color:var(--gold);background:rgba(255,204,0,.1);border:1px solid var(--gold)}
+.si{font-size:2em;margin-bottom:4px;display:block}
+.sn{font-weight:700;font-size:.9em;color:white;margin-bottom:2px;line-height:1.2}
+.sb{font-size:.8em;color:var(--green);margin-bottom:6px;font-weight:700}
+.sp{display:flex;align-items:center;gap:4px;font-size:.85em;font-weight:700;color:var(--accent)}
+.sdots{display:flex;gap:3px;margin-top:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)}
+.dot.on{background:var(--accent);border-color:var(--accent);box-shadow:0 0 4px var(--accent)}
+#leaderboard{padding:12px;display:none}
+.lb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:6px 0;border-bottom:1px solid var(--border)}
+.lb-title{font-family:'Cinzel',serif;font-size:.95em;font-weight:700;letter-spacing:2px;color:var(--gold)}
+#refresh-btn{background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:6px;padding:4px 10px;color:var(--accent);font-family:'Rajdhani',sans-serif;font-size:.75em;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all .2s}
+#refresh-btn:active{transform:scale(.95)}
+.lrow{display:flex;align-items:center;gap:12px;padding:12px;background:var(--panel);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;transition:all .2s}
+.lrow:hover{border-color:rgba(0,212,255,.3)}
+.lrow.you{border-color:var(--accent);background:rgba(0,212,255,.05)}
+.lrank{font-family:'Cinzel',serif;font-size:1.2em;font-weight:900;min-width:28px;text-align:center}
+.r1{color:var(--gold);text-shadow:0 0 10px rgba(255,204,0,.5)}
+.r2{color:#aaa}.r3{color:#cd7f32}
+.lname{flex:1;font-size:1em;font-weight:700;color:white}
+.llvl{font-size:.7em;color:var(--muted)}
+.lscore{font-size:.95em;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:4px}
+.lb-msg{text-align:center;padding:30px;color:var(--muted);font-size:.9em;letter-spacing:2px}
+/* debug panel */
+#debug-panel{margin:12px;background:rgba(255,34,68,.05);border:1px solid rgba(255,34,68,.2);border-radius:8px;padding:10px;font-size:.72em;color:#ff8899;display:none;word-break:break-all;line-height:1.6}
+#debug-panel.show{display:block}
+#debug-toggle{margin:8px 12px 0;background:rgba(255,34,68,.1);border:1px solid rgba(255,34,68,.2);border-radius:6px;padding:4px 10px;color:#ff8899;font-family:'Rajdhani',sans-serif;font-size:.7em;font-weight:700;cursor:pointer;width:calc(100% - 24px)}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(0,212,255,.15);border:1px solid var(--accent);border-radius:20px;padding:8px 18px;font-size:.85em;font-weight:700;color:var(--accent);letter-spacing:1px;opacity:0;transition:all .3s;z-index:200;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.flash{position:fixed;inset:0;pointer-events:none;z-index:300;animation:flashFade .4s ease forwards}
+@keyframes flashFade{0%{background:rgba(0,212,255,.15)}100%{background:transparent}}
 </style>
 </head>
 <body>
-
 <script>
 for(let i=0;i<15;i++){
   const p=document.createElement('div');
@@ -584,10 +118,7 @@ for(let i=0;i<15;i++){
   document.body.appendChild(p);
 }
 </script>
-
 <div id="app">
-
-  <!-- HEADER -->
   <div id="header">
     <div id="header-top">
       <div id="title">⚡ ПРОКЛЯТАЯ БИТВА</div>
@@ -597,648 +128,431 @@ for(let i=0;i<15;i++){
       <span id="energy-icon">🔮</span>
       <span id="energy-amount">0</span>
       <div id="stats-mini">
-        <div class="stat-mini">
-          <span class="val" id="stat-tap">+1</span>
-          <span class="lbl">за тап</span>
-        </div>
-        <div class="stat-mini">
-          <span class="val" id="stat-ps">0/с</span>
-          <span class="lbl">пассив</span>
-        </div>
+        <div class="stat-mini"><span class="val" id="stat-tap">+1</span><span class="lbl">за тап</span></div>
+        <div class="stat-mini"><span class="val" id="stat-ps">0/с</span><span class="lbl">пассив</span></div>
       </div>
     </div>
-    <div id="sync-indicator">
-      <div id="sync-dot"></div>
-      <span id="sync-text">не подключено</span>
-    </div>
+    <div id="sync-row"><div id="sync-dot"></div><span id="sync-text">ожидание...</span></div>
     <div id="xp-bar-wrap"><div id="xp-bar" style="width:0%"></div></div>
     <div id="xp-text">0 / 500 до следующего уровня</div>
   </div>
 
-  <!-- CLICKER -->
   <div id="clicker-area">
-
     <div id="name-row">
-      <input id="player-name-input" type="text" maxlength="20" placeholder="Твоё имя для топов..." />
+      <input id="player-name-input" type="text" maxlength="20" placeholder="Твоё имя для топов..."/>
       <button id="name-save-btn" onclick="saveName()">СОХРАНИТЬ</button>
     </div>
-
     <div id="quote-box">
       <div id="quote-text">Проклятая энергия исходит из негативных эмоций людей...</div>
-      <div class="quote-author" id="quote-author">— Сатору Годжо</div>
+      <div class="qa" id="quote-author">— Сатору Годжо</div>
     </div>
-
     <div id="orb-wrap" onclick="handleTap(event)">
       <div id="orb">💀</div>
       <div id="orb-rings"></div>
     </div>
-
     <div id="tap-hint">нажми для сбора энергии</div>
   </div>
 
-  <!-- TABS -->
   <div id="tabs">
-    <button class="tab-btn active" onclick="switchTab('techniques', this)">⚔️ Техники</button>
-    <button class="tab-btn" onclick="switchTab('curses', this)">👁 Проклятья</button>
-    <button class="tab-btn" onclick="switchTab('items', this)">🗡 Артефакты</button>
-    <button class="tab-btn" onclick="switchTab('leaders', this)">🏆 Топы</button>
+    <button class="tab-btn active" onclick="switchTab('techniques',this)">⚔️ Техники</button>
+    <button class="tab-btn" onclick="switchTab('curses',this)">👁 Проклятья</button>
+    <button class="tab-btn" onclick="switchTab('items',this)">🗡 Артефакты</button>
+    <button class="tab-btn" onclick="switchTab('leaders',this)">🏆 Топы</button>
   </div>
 
-  <!-- SHOP: Techniques -->
   <div id="shop-techniques" class="shop">
-    <div class="shop-section-title" style="color:var(--accent)">⚔️ Боевые техники</div>
+    <div class="sec-title" style="color:var(--accent)">⚔️ Боевые техники</div>
     <div class="shop-grid" id="grid-techniques"></div>
   </div>
-
-  <!-- SHOP: Curses -->
   <div id="shop-curses" class="shop">
-    <div class="shop-section-title" style="color:var(--purple)">👁 Проклятые духи</div>
+    <div class="sec-title" style="color:var(--purple)">👁 Проклятые духи</div>
     <div class="shop-grid" id="grid-curses"></div>
   </div>
-
-  <!-- SHOP: Items -->
   <div id="shop-items" class="shop">
-    <div class="shop-section-title" style="color:var(--gold)">🗡 Проклятые артефакты</div>
+    <div class="sec-title" style="color:var(--gold)">🗡 Проклятые артефакты</div>
     <div class="shop-grid" id="grid-items"></div>
   </div>
-
-  <!-- LEADERBOARD -->
   <div id="leaderboard">
-    <div class="leader-header">
-      <div class="leader-header-title">🏆 Топы</div>
+    <div class="lb-head">
+      <div class="lb-title">🏆 Топы</div>
       <button id="refresh-btn" onclick="loadLeaderboard()">↻ ОБНОВИТЬ</button>
     </div>
-    <div id="leaders-list"><div class="leaders-loading">Загрузка...</div></div>
+    <div id="leaders-list"><div class="lb-msg">Загрузка...</div></div>
   </div>
 
+  <button id="debug-toggle" onclick="toggleDebug()">🔧 Показать лог подключения</button>
+  <div id="debug-panel"></div>
 </div>
-
 <div id="toast"></div>
 
 <script>
-// ══════════════════════════════════════
-//  JSONBIN.IO CONFIG
-// ══════════════════════════════════════
-const JSONBIN_API_KEY = '$2a$10$CRBxPFB.skpxAsvCrAWSTuni9G4E.agCBqG8iNqrQAPlEvDMUEwIW6a1bc89e21f9ee59d2a01028';
-// Bin ID для лидерборда (создаётся автоматически при первом запуске)
-const LEADERBOARD_BIN_ID_KEY = 'cursed_lb_bin_id';
-const SAVE_KEY = 'cursed_clicker_v2';
-const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
+// ═══════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════
+// JSONBin.io — ключ из настроек аккаунта
+const API_KEY = '$2a$10$CRBxPFB.skpxAsvCrAWSTuni9G4E.agCBqG8iNqrQAPlEvDMUEwIW6a1bc89e21f9ee59d2a01028';
+const BASE    = 'https://api.jsonbin.io/v3';
+// ID бина лидерборда — заполнится автоматически при первом запуске
+// Или вставь существующий ID вручную сюда:
+const FIXED_BIN_ID = ''; // например: '6634abc123456789'
 
-// ══════════════════════════════════════
+const SAVE_KEY   = 'cursed_v3';
+const BIN_ID_KEY = 'cursed_bin_id_v3';
+
+// ═══════════════════════════════════
 //  GAME DATA
-// ══════════════════════════════════════
-const LEVELS = [
-  {name:'Ученик', xp:500},
-  {name:'Помощник', xp:2000},
-  {name:'Колдун 1 класса', xp:10000},
-  {name:'Полуспец.', xp:50000},
-  {name:'Спец.колдун', xp:200000},
-  {name:'Мастер техник', xp:1000000},
-  {name:'Особый класс', xp:Infinity},
+// ═══════════════════════════════════
+const LEVELS=[
+  {name:'Ученик',xp:500},{name:'Помощник',xp:2000},
+  {name:'Колдун 1 класса',xp:10000},{name:'Полуспец.',xp:50000},
+  {name:'Спец.колдун',xp:200000},{name:'Мастер техник',xp:1000000},
+  {name:'Особый класс',xp:Infinity}
 ];
-
-const QUOTES = [
+const QUOTES=[
   ['Проклятая энергия исходит из негативных эмоций людей...','— Сатору Годжо'],
   ['Я не проиграю. Потому что есть то, что я должен защитить.','— Юдзи Итадори'],
   ['Сила — это не то, что даётся. Это то, что берётся.','— Тодж Фусигуро'],
   ['Мир несправедлив. Но это не повод отказываться от него.','— Мегуми Фусигуро'],
   ['Даже проклятый может найти смысл в жизни.','— Нобара Кугисаки'],
 ];
-
-const UPGRADES = {
-  techniques: [
-    {id:'t1', name:'Удар кулаком', icon:'👊', rarity:'common', baseCost:100, perSec:1, perTap:0, maxLevel:5},
-    {id:'t2', name:'Растяжение', icon:'🌀', rarity:'rare', baseCost:500, perSec:0, perTap:3, maxLevel:5},
-    {id:'t3', name:'Чёрная вспышка', icon:'⚫', rarity:'epic', baseCost:2000, perSec:15, perTap:5, maxLevel:5},
-    {id:'t4', name:'Полый фиолетовый', icon:'💜', rarity:'legendary', baseCost:20000, perSec:100, perTap:20, maxLevel:5},
-    {id:'t5', name:'Десять теней', icon:'🐉', rarity:'epic', baseCost:8000, perSec:50, perTap:10, maxLevel:5},
-    {id:'t6', name:'Бесконечность ∞', icon:'♾️', rarity:'legendary', baseCost:100000, perSec:500, perTap:50, maxLevel:5},
+const UPG={
+  techniques:[
+    {id:'t1',name:'Удар кулаком',icon:'👊',r:'common',cost:100,ps:1,pt:0,max:5},
+    {id:'t2',name:'Растяжение',icon:'🌀',r:'rare',cost:500,ps:0,pt:3,max:5},
+    {id:'t3',name:'Чёрная вспышка',icon:'⚫',r:'epic',cost:2000,ps:15,pt:5,max:5},
+    {id:'t4',name:'Полый фиолетовый',icon:'💜',r:'legendary',cost:20000,ps:100,pt:20,max:5},
+    {id:'t5',name:'Десять теней',icon:'🐉',r:'epic',cost:8000,ps:50,pt:10,max:5},
+    {id:'t6',name:'Бесконечность ∞',icon:'♾️',r:'legendary',cost:100000,ps:500,pt:50,max:5},
   ],
-  curses: [
-    {id:'c1', name:'Дух-паразит', icon:'🕷', rarity:'common', baseCost:150, perSec:2, perTap:0, maxLevel:5},
-    {id:'c2', name:'Специальный дух', icon:'👁', rarity:'rare', baseCost:800, perSec:8, perTap:2, maxLevel:5},
-    {id:'c3', name:'Проклятый червь', icon:'🐛', rarity:'rare', baseCost:3500, perSec:20, perTap:0, maxLevel:5},
-    {id:'c4', name:'Тюрьма-скала', icon:'🪨', rarity:'epic', baseCost:15000, perSec:80, perTap:15, maxLevel:5},
-    {id:'c5', name:'Рётай дух', icon:'🐍', rarity:'epic', baseCost:60000, perSec:300, perTap:30, maxLevel:5},
-    {id:'c6', name:'Сукуна', icon:'😈', rarity:'legendary', baseCost:500000, perSec:2000, perTap:150, maxLevel:5},
+  curses:[
+    {id:'c1',name:'Дух-паразит',icon:'🕷',r:'common',cost:150,ps:2,pt:0,max:5},
+    {id:'c2',name:'Специальный дух',icon:'👁',r:'rare',cost:800,ps:8,pt:2,max:5},
+    {id:'c3',name:'Проклятый червь',icon:'🐛',r:'rare',cost:3500,ps:20,pt:0,max:5},
+    {id:'c4',name:'Тюрьма-скала',icon:'🪨',r:'epic',cost:15000,ps:80,pt:15,max:5},
+    {id:'c5',name:'Рётай дух',icon:'🐍',r:'epic',cost:60000,ps:300,pt:30,max:5},
+    {id:'c6',name:'Сукуна',icon:'😈',r:'legendary',cost:500000,ps:2000,pt:150,max:5},
   ],
-  items: [
-    {id:'i1', name:'Проклятый инструмент', icon:'🗡️', rarity:'common', baseCost:200, perSec:0, perTap:2, maxLevel:5},
-    {id:'i2', name:'Печать Готэнба', icon:'📜', rarity:'rare', baseCost:1200, perSec:12, perTap:0, maxLevel:5},
-    {id:'i3', name:'Кукла-хризантема', icon:'🌸', rarity:'rare', baseCost:4000, perSec:0, perTap:8, maxLevel:5},
-    {id:'i4', name:'Тело Ёмы', icon:'⚱️', rarity:'epic', baseCost:18000, perSec:120, perTap:0, maxLevel:5},
-    {id:'i5', name:'Катана Тодзи', icon:'⚔️', rarity:'epic', baseCost:75000, perSec:0, perTap:60, maxLevel:5},
-    {id:'i6', name:'Мозг Кэндзяку', icon:'🧠', rarity:'legendary', baseCost:800000, perSec:3000, perTap:200, maxLevel:5},
-  ],
+  items:[
+    {id:'i1',name:'Проклятый инструмент',icon:'🗡️',r:'common',cost:200,ps:0,pt:2,max:5},
+    {id:'i2',name:'Печать Готэнба',icon:'📜',r:'rare',cost:1200,ps:12,pt:0,max:5},
+    {id:'i3',name:'Кукла-хризантема',icon:'🌸',r:'rare',cost:4000,ps:0,pt:8,max:5},
+    {id:'i4',name:'Тело Ёмы',icon:'⚱️',r:'epic',cost:18000,ps:120,pt:0,max:5},
+    {id:'i5',name:'Катана Тодзи',icon:'⚔️',r:'epic',cost:75000,ps:0,pt:60,max:5},
+    {id:'i6',name:'Мозг Кэндзяку',icon:'🧠',r:'legendary',cost:800000,ps:3000,pt:200,max:5},
+  ]
 };
 
-// ══════════════════════════════════════
+// ═══════════════════════════════════
 //  STATE
-// ══════════════════════════════════════
-let state = loadState();
-let currentTab = 'techniques';
-let syncStatus = 'idle'; // idle | syncing | synced | error
-let lastSyncTime = 0;
-let syncDebounceTimer = null;
+// ═══════════════════════════════════
+let G=loadState(), curTab='techniques';
+let lastSync=0, syncTimer=null, tapCount=0;
+let debugLog=[];
 
-function defaultState() {
-  return {
-    energy: 0,
-    totalEnergy: 0,
-    level: 0,
-    owned: {},
-    playerName: '',
-    playerId: 'player_' + Math.random().toString(36).substr(2, 9),
-    lastTime: Date.now(),
-  };
+function defaultState(){
+  return{energy:0,total:0,level:0,owned:{},name:'',
+    pid:'p'+Math.random().toString(36).substr(2,9),lastTime:Date.now()};
 }
-
-function loadState() {
-  try {
-    const s = JSON.parse(localStorage.getItem(SAVE_KEY));
-    if(s && !s.playerId) s.playerId = 'player_' + Math.random().toString(36).substr(2, 9);
-    return s || defaultState();
-  } catch(e) { return defaultState(); }
+function loadState(){
+  try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));
+    if(s&&!s.pid)s.pid='p'+Math.random().toString(36).substr(2,9);
+    return s||defaultState();}
+  catch{return defaultState();}
 }
+function saveLocal(){G.lastTime=Date.now();localStorage.setItem(SAVE_KEY,JSON.stringify(G));}
 
-function saveState() {
-  state.lastTime = Date.now();
-  localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-}
-
-// ══════════════════════════════════════
-//  JSONBIN API
-// ══════════════════════════════════════
-
-function setSyncStatus(status) {
-  syncStatus = status;
-  const dot = document.getElementById('sync-dot');
-  const text = document.getElementById('sync-text');
-  dot.className = 'sync-dot';
-
-  switch(status) {
-    case 'syncing':
-      dot.id = 'sync-dot';
-      dot.className = '';
-      dot.setAttribute('id', 'sync-dot');
-      dot.style.background = '#ffcc00';
-      dot.style.animation = 'syncPulse 0.8s ease-in-out infinite';
-      text.textContent = 'синхронизация...';
-      break;
-    case 'synced':
-      dot.style.background = '#00ff88';
-      dot.style.animation = 'none';
-      text.textContent = 'синхронизировано ✓';
-      break;
-    case 'error':
-      dot.style.background = '#ff2244';
-      dot.style.animation = 'none';
-      text.textContent = 'ошибка сервера';
-      break;
-    default:
-      dot.style.background = '#4a6b80';
-      dot.style.animation = 'none';
-      text.textContent = 'локально';
-  }
-}
-
-// Get or create the leaderboard bin
-async function getOrCreateLeaderboardBin() {
-  let binId = localStorage.getItem(LEADERBOARD_BIN_ID_KEY);
-
-  if(binId) return binId;
-
-  // Create new bin
-  try {
-    setSyncStatus('syncing');
-    const res = await fetch(`${JSONBIN_BASE}/b`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN_API_KEY,
-        'X-Bin-Name': 'CursedBattleLeaderboard',
-        'X-Bin-Private': 'false',
-      },
-      body: JSON.stringify({ players: [] })
-    });
-
-    if(!res.ok) throw new Error('Create bin failed');
-
-    const data = await res.json();
-    binId = data.metadata.id;
-    localStorage.setItem(LEADERBOARD_BIN_ID_KEY, binId);
-    setSyncStatus('synced');
-    return binId;
-  } catch(e) {
-    setSyncStatus('error');
-    console.error('JSONBin create error:', e);
-    return null;
-  }
-}
-
-// Upload player score to leaderboard
-async function syncPlayerToLeaderboard() {
-  if(!state.playerName || state.totalEnergy < 1) return;
-
-  // Debounce — don't sync more than once per 30 sec
-  const now = Date.now();
-  if(now - lastSyncTime < 30000) {
-    clearTimeout(syncDebounceTimer);
-    syncDebounceTimer = setTimeout(syncPlayerToLeaderboard, 30000 - (now - lastSyncTime));
-    return;
-  }
-
-  lastSyncTime = now;
-
-  try {
-    setSyncStatus('syncing');
-    const binId = await getOrCreateLeaderboardBin();
-    if(!binId) return;
-
-    // Read current leaderboard
-    const readRes = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, {
-      headers: { 'X-Master-Key': JSONBIN_API_KEY }
-    });
-
-    if(!readRes.ok) throw new Error('Read failed');
-    const readData = await readRes.json();
-    let players = readData.record.players || [];
-
-    // Update or insert this player
-    const idx = players.findIndex(p => p.id === state.playerId);
-    const playerEntry = {
-      id: state.playerId,
-      name: state.playerName,
-      score: Math.floor(state.totalEnergy),
-      level: state.level + 1,
-      levelName: LEVELS[state.level].name,
-      updatedAt: new Date().toISOString(),
-    };
-
-    if(idx >= 0) {
-      players[idx] = playerEntry;
-    } else {
-      players.push(playerEntry);
-    }
-
-    // Keep top 100 players only
-    players.sort((a,b) => b.score - a.score);
-    if(players.length > 100) players = players.slice(0, 100);
-
-    // Write back
-    const writeRes = await fetch(`${JSONBIN_BASE}/b/${binId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN_API_KEY,
-      },
-      body: JSON.stringify({ players })
-    });
-
-    if(!writeRes.ok) throw new Error('Write failed');
-
-    setSyncStatus('synced');
-  } catch(e) {
-    setSyncStatus('error');
-    console.error('JSONBin sync error:', e);
-  }
-}
-
-// Load leaderboard from server
-async function loadLeaderboard() {
-  const list = document.getElementById('leaders-list');
-  list.innerHTML = '<div class="leaders-loading">⏳ Загрузка с сервера...</div>';
-
-  try {
-    const binId = await getOrCreateLeaderboardBin();
-    if(!binId) throw new Error('No bin');
-
-    const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, {
-      headers: { 'X-Master-Key': JSONBIN_API_KEY }
-    });
-
-    if(!res.ok) throw new Error('Load failed');
-    const data = await res.json();
-    const players = (data.record.players || []).sort((a,b) => b.score - a.score);
-
-    renderLeaderboard(players);
-    setSyncStatus('synced');
-  } catch(e) {
-    setSyncStatus('error');
-    list.innerHTML = '<div class="leaders-loading" style="color:var(--red)">❌ Ошибка загрузки. Проверьте интернет.</div>';
-    console.error('JSONBin load error:', e);
-  }
-}
-
-function renderLeaderboard(players) {
-  const list = document.getElementById('leaders-list');
-
-  // Add current player if not in list
-  let combined = [...players];
-  const myIdx = combined.findIndex(p => p.id === state.playerId);
-
-  // If player has a name and score, make sure they appear
-  if(myIdx < 0 && state.playerName && state.totalEnergy > 0) {
-    combined.push({
-      id: state.playerId,
-      name: state.playerName + ' (ты)',
-      score: Math.floor(state.totalEnergy),
-      level: state.level + 1,
-      levelName: LEVELS[state.level].name,
-      isYou: true,
-    });
-    combined.sort((a,b) => b.score - a.score);
-  }
-
-  if(combined.length === 0) {
-    list.innerHTML = '<div class="leaders-loading">Нет игроков. Будь первым! 🏆</div>';
-    return;
-  }
-
-  list.innerHTML = '';
-  combined.forEach((p, i) => {
-    const isYou = p.id === state.playerId || p.isYou;
-    const row = document.createElement('div');
-    row.className = 'leader-row' + (isYou ? ' is-you' : '');
-    const rankIcons = ['🥇','🥈','🥉'];
-    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
-    row.innerHTML = `
-      <div class="leader-rank ${rankClass}">${rankIcons[i] || '#'+(i+1)}</div>
-      <div>
-        <div class="leader-name">${escapeHtml(p.name)}${isYou ? ' 👤' : ''}</div>
-        <div class="leader-level">УР.${p.level || 1} — ${p.levelName || 'Ученик'}</div>
-      </div>
-      <div class="leader-score">🔮 ${fmt(p.score)}</div>`;
-    list.appendChild(row);
-  });
-}
-
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-// ══════════════════════════════════════
+// ═══════════════════════════════════
 //  COMPUTED
-// ══════════════════════════════════════
-function getTapPower() {
-  let base = 1;
-  forEachUpgrade((up, lvl) => { base += up.perTap * lvl; });
-  return base;
+// ═══════════════════════════════════
+function tapPow(){let b=1;eachUp((u,l)=>b+=u.pt*l);return b;}
+function perSec(){let t=0;eachUp((u,l)=>t+=u.ps*l);return t;}
+function eachUp(fn){for(const c of Object.values(UPG))for(const u of c){const l=G.owned[u.id]||0;if(l>0)fn(u,l);}}
+function costOf(u){return Math.floor(u.cost*Math.pow(1.6,G.owned[u.id]||0));}
+
+// ═══════════════════════════════════
+//  DEBUG
+// ═══════════════════════════════════
+function dbg(msg,ok=null){
+  const now=new Date().toTimeString().slice(0,8);
+  const icon=ok===true?'✅':ok===false?'❌':'ℹ️';
+  debugLog.push(`${now} ${icon} ${msg}`);
+  if(debugLog.length>30)debugLog.shift();
+  const el=document.getElementById('debug-panel');
+  if(el.classList.contains('show'))el.innerHTML=debugLog.slice().reverse().map(l=>`<div>${l}</div>`).join('');
+  console.log(msg);
+}
+function toggleDebug(){
+  const el=document.getElementById('debug-panel');
+  el.classList.toggle('show');
+  if(el.classList.contains('show'))el.innerHTML=debugLog.slice().reverse().map(l=>`<div>${l}</div>`).join('');
 }
 
-function getPerSecond() {
-  let total = 0;
-  forEachUpgrade((up, lvl) => { total += up.perSec * lvl; });
-  return total;
+// ═══════════════════════════════════
+//  JSONBIN API
+// ═══════════════════════════════════
+function setSyncUI(state){
+  const dot=document.getElementById('sync-dot');
+  const txt=document.getElementById('sync-text');
+  dot.className='';
+  if(state==='syncing'){dot.classList.add('syncing');txt.textContent='синхронизация...';}
+  else if(state==='ok'){dot.classList.add('ok');txt.textContent='синхронизировано ✓';}
+  else if(state==='err'){dot.classList.add('err');txt.textContent='ошибка сервера';}
+  else{txt.textContent='локально';}
 }
 
-function forEachUpgrade(fn) {
-  for(const cat of Object.values(UPGRADES)) {
-    for(const up of cat) {
-      const lvl = state.owned[up.id] || 0;
-      if(lvl > 0) fn(up, lvl);
-    }
+async function getBinId(){
+  if(FIXED_BIN_ID) return FIXED_BIN_ID;
+  const stored=localStorage.getItem(BIN_ID_KEY);
+  if(stored){dbg('Bin ID из кэша: '+stored);return stored;}
+
+  dbg('Создаю новый бин...');
+  setSyncUI('syncing');
+  const res=await fetch(BASE+'/b',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'X-Master-Key':API_KEY,
+      'X-Bin-Name':'CursedBattle_LB',
+      'X-Bin-Private':'false',
+    },
+    body:JSON.stringify({players:[]})
+  });
+  const text=await res.text();
+  dbg('CREATE response '+res.status+': '+text.slice(0,120), res.ok);
+  if(!res.ok) throw new Error('create bin: '+res.status+' '+text.slice(0,80));
+  const data=JSON.parse(text);
+  const id=data.metadata.id;
+  localStorage.setItem(BIN_ID_KEY,id);
+  dbg('Бин создан: '+id, true);
+  return id;
+}
+
+async function readBin(binId){
+  const res=await fetch(BASE+'/b/'+binId+'/latest',{
+    headers:{'X-Master-Key':API_KEY,'X-Bin-Meta':'false'}
+  });
+  const text=await res.text();
+  dbg('READ '+res.status+': '+text.slice(0,80), res.ok);
+  if(!res.ok) throw new Error('read: '+res.status);
+  return JSON.parse(text);
+}
+
+async function writeBin(binId,data){
+  const res=await fetch(BASE+'/b/'+binId,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json','X-Master-Key':API_KEY},
+    body:JSON.stringify(data)
+  });
+  const text=await res.text();
+  dbg('WRITE '+res.status+': '+text.slice(0,80), res.ok);
+  if(!res.ok) throw new Error('write: '+res.status);
+}
+
+async function syncToServer(){
+  if(!G.name||G.total<1){dbg('Синхронизация пропущена — нет имени или очков');return;}
+  const now=Date.now();
+  if(now-lastSync<30000){
+    clearTimeout(syncTimer);
+    syncTimer=setTimeout(syncToServer,30000-(now-lastSync));
+    return;
+  }
+  lastSync=now;
+  setSyncUI('syncing');
+  dbg('Начинаю синхронизацию игрока: '+G.name);
+  try{
+    const binId=await getBinId();
+    const record=await readBin(binId);
+    let players=Array.isArray(record.players)?record.players:[];
+    const entry={id:G.pid,name:G.name,score:Math.floor(G.total),
+      level:G.level+1,lvlName:LEVELS[G.level].name,ts:Date.now()};
+    const idx=players.findIndex(p=>p.id===G.pid);
+    if(idx>=0) players[idx]=entry; else players.push(entry);
+    players.sort((a,b)=>b.score-a.score);
+    if(players.length>100)players=players.slice(0,100);
+    await writeBin(binId,{players});
+    setSyncUI('ok');
+    dbg('Синхронизация успешна!', true);
+  }catch(e){
+    setSyncUI('err');
+    dbg('Ошибка синхронизации: '+e.message, false);
   }
 }
 
-function getCost(up) {
-  const lvl = state.owned[up.id] || 0;
-  return Math.floor(up.baseCost * Math.pow(1.6, lvl));
+async function loadLeaderboard(){
+  const list=document.getElementById('leaders-list');
+  list.innerHTML='<div class="lb-msg">⏳ Загрузка с сервера...</div>';
+  dbg('Загружаю лидерборд...');
+  try{
+    const binId=await getBinId();
+    const record=await readBin(binId);
+    const players=(record.players||[]).sort((a,b)=>b.score-a.score);
+    dbg('Получено игроков: '+players.length, true);
+    renderLB(players);
+    setSyncUI('ok');
+  }catch(e){
+    dbg('Ошибка загрузки: '+e.message, false);
+    list.innerHTML='<div class="lb-msg" style="color:var(--red)">❌ '+escH(e.message)+'<br><small>Проверь консоль и лог подключения</small></div>';
+    setSyncUI('err');
+  }
 }
 
-// ══════════════════════════════════════
-//  UI
-// ══════════════════════════════════════
-function fmt(n) {
-  if(n >= 1e9) return (n/1e9).toFixed(1)+'B';
-  if(n >= 1e6) return (n/1e6).toFixed(1)+'M';
-  if(n >= 1000) return (n/1000).toFixed(1)+'K';
-  return Math.floor(n).toString();
+function renderLB(players){
+  const list=document.getElementById('leaders-list');
+  let all=[...players];
+  if(!all.find(p=>p.id===G.pid)&&G.name&&G.total>0)
+    all.push({id:G.pid,name:G.name,score:Math.floor(G.total),level:G.level+1,lvlName:LEVELS[G.level].name});
+  all.sort((a,b)=>b.score-a.score);
+  if(!all.length){list.innerHTML='<div class="lb-msg">Нет игроков. Будь первым! 🏆</div>';return;}
+  const icons=['🥇','🥈','🥉'];
+  list.innerHTML=all.map((p,i)=>{
+    const you=p.id===G.pid;
+    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
+    return`<div class="lrow${you?' you':''}">
+      <div class="lrank ${rc}">${icons[i]||'#'+(i+1)}</div>
+      <div><div class="lname">${escH(p.name)}${you?' 👤':''}</div><div class="llvl">УР.${p.level||1} — ${escH(p.lvlName||'Ученик')}</div></div>
+      <div class="lscore">🔮 ${fmt(p.score)}</div></div>`;
+  }).join('');
 }
 
-function updateHeader() {
-  document.getElementById('energy-amount').textContent = fmt(state.energy);
-  document.getElementById('stat-tap').textContent = '+'+fmt(getTapPower());
-  document.getElementById('stat-ps').textContent = fmt(getPerSecond())+'/с';
+function debouncedSync(){clearTimeout(syncTimer);syncTimer=setTimeout(syncToServer,8000);}
 
-  while(state.level < LEVELS.length - 1 && state.totalEnergy >= LEVELS[state.level].xp) {
-    state.level++;
-    showToast('⚡ НОВЫЙ УРОВЕНЬ: ' + LEVELS[state.level].name.toUpperCase());
-    updateOrb();
-    // Sync new level to server
+// ═══════════════════════════════════
+//  UI helpers
+// ═══════════════════════════════════
+const ORB=['💀','⚡','👁','🔮','💜','🌀','♾️'];
+const RL={common:'ОБЫЧНАЯ',rare:'РЕДКАЯ',epic:'ЭПИЧЕСКАЯ',legendary:'ЛЕГЕНДАРНАЯ'};
+const RC={common:'rc',rare:'rr',epic:'re',legendary:'rl'};
+
+function fmt(n){
+  if(n>=1e9)return(n/1e9).toFixed(1)+'B';
+  if(n>=1e6)return(n/1e6).toFixed(1)+'M';
+  if(n>=1000)return(n/1000).toFixed(1)+'K';
+  return Math.floor(n)+'';
+}
+function escH(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+function updateHeader(){
+  document.getElementById('energy-amount').textContent=fmt(G.energy);
+  document.getElementById('stat-tap').textContent='+'+fmt(tapPow());
+  document.getElementById('stat-ps').textContent=fmt(perSec())+'/с';
+  while(G.level<LEVELS.length-1&&G.total>=LEVELS[G.level].xp){
+    G.level++;
+    showToast('⚡ УРОВЕНЬ '+( G.level+1)+': '+LEVELS[G.level].name.toUpperCase());
+    document.getElementById('orb').textContent=ORB[Math.min(G.level,ORB.length-1)];
     debouncedSync();
   }
-
-  const curLevel = LEVELS[state.level];
-  document.getElementById('level-badge').textContent = 'УР.'+(state.level+1)+' — '+LEVELS[state.level].name.toUpperCase();
-  document.getElementById('xp-bar').style.width = Math.min(100, (state.totalEnergy / curLevel.xp)*100) + '%';
-  document.getElementById('xp-text').textContent = fmt(state.totalEnergy)+' / '+fmt(curLevel.xp)+' до следующего уровня';
+  const L=LEVELS[G.level];
+  document.getElementById('level-badge').textContent='УР.'+(G.level+1)+' — '+L.name.toUpperCase();
+  document.getElementById('xp-bar').style.width=Math.min(100,(G.total/L.xp)*100)+'%';
+  document.getElementById('xp-text').textContent=fmt(G.total)+' / '+fmt(L.xp)+' до следующего уровня';
 }
 
-const ORB_EMOJIS = ['💀','⚡','👁','🔮','💜','🌀','♾️'];
-function updateOrb() {
-  const idx = Math.min(state.level, ORB_EMOJIS.length-1);
-  document.getElementById('orb').textContent = ORB_EMOJIS[idx];
-}
-
-function renderShop(cat) {
-  const grid = document.getElementById('grid-'+cat);
-  if(!grid) return;
-  grid.innerHTML = '';
-  for(const up of UPGRADES[cat]) {
-    const lvl = state.owned[up.id] || 0;
-    const cost = getCost(up);
-    const affordable = state.energy >= cost;
-    const maxed = lvl >= up.maxLevel;
-
-    const card = document.createElement('div');
-    card.className = 'shop-card' + ((!affordable && !maxed) ? ' cant-afford' : '');
-    card.onclick = () => buyUpgrade(up.id, cat);
-
-    const bonusParts = [];
-    if(up.perSec) bonusParts.push('+'+up.perSec*(lvl+1)+'/сек');
-    if(up.perTap) bonusParts.push('+'+up.perTap*(lvl+1)+' тап');
-
-    const rarityLabels = {common:'ОБЫЧНАЯ',rare:'РЕДКАЯ',epic:'ЭПИЧЕСКАЯ',legendary:'ЛЕГЕНДАРНАЯ'};
-
-    card.innerHTML = `
-      <span class="rarity-badge rarity-${up.rarity}">${rarityLabels[up.rarity]}</span>
-      <span class="shop-icon">${up.icon}</span>
-      <div class="shop-name">${up.name}</div>
-      <div class="shop-bonus">${bonusParts.join(' ')}</div>
-      ${maxed
-        ? '<div class="shop-price" style="color:var(--gold)">✅ МАКС</div>'
-        : `<div class="shop-price">🔮 ${fmt(cost)}</div>`
-      }
-      <div class="shop-level-dots">
-        ${Array.from({length:up.maxLevel},(_,i)=>`<div class="dot ${i<lvl?'filled':''}"></div>`).join('')}
-      </div>`;
-    grid.appendChild(card);
+function renderShop(cat){
+  const grid=document.getElementById('grid-'+cat);
+  if(!grid)return;
+  grid.innerHTML='';
+  for(const u of UPG[cat]){
+    const lvl=G.owned[u.id]||0,cost=costOf(u),maxed=lvl>=u.max,can=G.energy>=cost;
+    const bp=[];if(u.ps)bp.push('+'+u.ps*(lvl+1)+'/сек');if(u.pt)bp.push('+'+u.pt*(lvl+1)+' тап');
+    const d=document.createElement('div');
+    d.className='shop-card'+((!can&&!maxed)?' no-gold':'');
+    d.onclick=()=>buy(u.id,cat);
+    d.innerHTML=`<span class="rb ${RC[u.r]}">${RL[u.r]}</span>
+      <span class="si">${u.icon}</span>
+      <div class="sn">${u.name}</div>
+      <div class="sb">${bp.join(' ')||'—'}</div>
+      ${maxed?'<div class="sp" style="color:var(--gold)">✅ МАКС</div>':`<div class="sp">🔮 ${fmt(cost)}</div>`}
+      <div class="sdots">${Array.from({length:u.max},(_,i)=>`<div class="dot ${i<lvl?'on':''}"></div>`).join('')}</div>`;
+    grid.appendChild(d);
   }
 }
 
-// ══════════════════════════════════════
+// ═══════════════════════════════════
 //  ACTIONS
-// ══════════════════════════════════════
-let syncTickCounter = 0;
-
-function handleTap(e) {
-  const power = getTapPower();
-  state.energy += power;
-  state.totalEnergy += power;
-
-  const wrap = document.getElementById('orb-wrap');
-  const rect = wrap.getBoundingClientRect();
-  const cx = e.touches ? e.touches[0].clientX : e.clientX;
-  const cy = e.touches ? e.touches[0].clientY : e.clientY;
-  const pop = document.createElement('div');
-  pop.className = 'click-pop';
-  pop.textContent = '+'+fmt(power);
-  pop.style.left = (cx - rect.left) + 'px';
-  pop.style.top = (cy - rect.top) + 'px';
-  wrap.appendChild(pop);
-  setTimeout(() => pop.remove(), 900);
-
+// ═══════════════════════════════════
+function handleTap(e){
+  const pw=tapPow();G.energy+=pw;G.total+=pw;
+  const wrap=document.getElementById('orb-wrap'),rect=wrap.getBoundingClientRect();
+  const cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;
+  const pop=document.createElement('div');
+  pop.className='click-pop';pop.textContent='+'+fmt(pw);
+  pop.style.left=(cx-rect.left)+'px';pop.style.top=(cy-rect.top)+'px';
+  wrap.appendChild(pop);setTimeout(()=>pop.remove(),900);
   updateHeader();
-  if(currentTab !== 'leaders') renderShop(currentTab);
-
-  // Sync every 50 taps
-  syncTickCounter++;
-  if(syncTickCounter >= 50) {
-    syncTickCounter = 0;
-    debouncedSync();
-  }
+  if(curTab!=='leaders')renderShop(curTab);
+  if(++tapCount>=50){tapCount=0;debouncedSync();}
 }
 
-function buyUpgrade(id, cat) {
-  const up = UPGRADES[cat].find(u=>u.id===id);
-  if(!up) return;
-  const lvl = state.owned[id] || 0;
-  if(lvl >= up.maxLevel) return;
-  const cost = getCost(up);
-  if(state.energy < cost) { showToast('⚠️ Недостаточно энергии!'); return; }
-
-  state.energy -= cost;
-  state.owned[id] = lvl + 1;
-
-  const flash = document.createElement('div');
-  flash.className = 'screen-flash';
-  document.body.appendChild(flash);
-  setTimeout(() => flash.remove(), 400);
-
-  showToast('✅ '+up.name+' улучшено!');
-  renderShop(cat);
-  updateHeader();
-  saveState();
-  debouncedSync();
+function buy(id,cat){
+  const u=UPG[cat].find(x=>x.id===id);if(!u)return;
+  const lvl=G.owned[id]||0;if(lvl>=u.max)return;
+  const cost=costOf(u);if(G.energy<cost){showToast('⚠️ Недостаточно энергии!');return;}
+  G.energy-=cost;G.owned[id]=lvl+1;
+  const f=document.createElement('div');f.className='flash';document.body.appendChild(f);setTimeout(()=>f.remove(),400);
+  showToast('✅ '+u.name+' улучшено!');
+  renderShop(cat);updateHeader();saveLocal();debouncedSync();
 }
 
-function saveName() {
-  const input = document.getElementById('player-name-input');
-  const name = input.value.trim();
-  if(!name) { showToast('⚠️ Введи имя!'); return; }
-  state.playerName = name;
-  saveState();
-  showToast('👤 Имя сохранено: ' + name);
-  debouncedSync();
+function saveName(){
+  const v=document.getElementById('player-name-input').value.trim();
+  if(!v){showToast('⚠️ Введи имя!');return;}
+  G.name=v;saveLocal();
+  showToast('👤 Имя сохранено: '+v);
+  dbg('Имя сохранено: '+v+' | Пытаюсь синхронизировать...');
+  syncToServer();
 }
 
-// Tab switching
-function switchTab(tab, btn) {
-  currentTab = tab;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.shop, #leaderboard').forEach(s => s.style.display = 'none');
-
-  if(btn) btn.classList.add('active');
-
-  if(tab === 'leaders') {
-    document.getElementById('leaderboard').style.display = 'block';
-    loadLeaderboard();
-  } else {
-    const el = document.getElementById('shop-'+tab);
-    if(el) { el.style.display = 'block'; renderShop(tab); }
-  }
+function switchTab(tab,btn){
+  curTab=tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.shop,#leaderboard').forEach(s=>s.style.display='none');
+  if(btn)btn.classList.add('active');
+  if(tab==='leaders'){document.getElementById('leaderboard').style.display='block';loadLeaderboard();}
+  else{const el=document.getElementById('shop-'+tab);if(el){el.style.display='block';renderShop(tab);}}
 }
 
-// Debounced server sync
-let syncTimer = null;
-function debouncedSync() {
-  clearTimeout(syncTimer);
-  syncTimer = setTimeout(syncPlayerToLeaderboard, 5000);
+let toastT;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);
 }
 
-// Toast
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+// ═══════════════════════════════════
+//  LOOPS
+// ═══════════════════════════════════
+setInterval(()=>{
+  const ps=perSec();
+  if(ps>0){G.energy+=ps/10;G.total+=ps/10;updateHeader();}
+  saveLocal();
+},100);
+
+setInterval(()=>{if(G.name)syncToServer();},120000);
+
+// Offline
+const offMs=Date.now()-(G.lastTime||Date.now());
+if(offMs>5000){
+  const gained=perSec()*Math.min(offMs/1000,3600)*.5;
+  if(gained>0){G.energy+=gained;G.total+=gained;setTimeout(()=>showToast('💤 +'+fmt(gained)+' 🔮 пока вас не было'),500);}
 }
 
-// ══════════════════════════════════════
-//  PASSIVE & INTERVALS
-// ══════════════════════════════════════
-setInterval(() => {
-  const ps = getPerSecond();
-  if(ps > 0) {
-    state.energy += ps / 10;
-    state.totalEnergy += ps / 10;
-    updateHeader();
-  }
-  saveState();
-}, 100);
+let qi=0;
+setInterval(()=>{qi=(qi+1)%QUOTES.length;document.getElementById('quote-text').textContent=QUOTES[qi][0];document.getElementById('quote-author').textContent=QUOTES[qi][1];},8000);
 
-// Auto-sync every 2 minutes
-setInterval(() => {
-  if(state.playerName) syncPlayerToLeaderboard();
-}, 120000);
-
-// Offline income
-const offlineMs = Date.now() - (state.lastTime || Date.now());
-if(offlineMs > 5000) {
-  const offlineSecs = Math.min(offlineMs / 1000, 3600);
-  const gained = getPerSecond() * offlineSecs * 0.5;
-  if(gained > 0) {
-    state.energy += gained;
-    state.totalEnergy += gained;
-    setTimeout(() => showToast('💤 Пока вас не было: +'+fmt(gained)+' 🔮'), 500);
-  }
-}
-state.lastTime = Date.now();
-
-// Rotating quotes
-let quoteIdx = 0;
-setInterval(() => {
-  quoteIdx = (quoteIdx + 1) % QUOTES.length;
-  document.getElementById('quote-text').textContent = QUOTES[quoteIdx][0];
-  document.getElementById('quote-author').textContent = QUOTES[quoteIdx][1];
-}, 8000);
-
-// ══════════════════════════════════════
+// ═══════════════════════════════════
 //  INIT
-// ══════════════════════════════════════
-updateOrb();
+// ═══════════════════════════════════
+document.getElementById('orb').textContent=ORB[Math.min(G.level,ORB.length-1)];
 updateHeader();
-
-// Restore player name
-if(state.playerName) {
-  document.getElementById('player-name-input').value = state.playerName;
-}
-
-// Show first tab
-document.querySelectorAll('.shop').forEach(s => s.style.display = 'none');
-document.getElementById('shop-techniques').style.display = 'block';
-document.getElementById('leaderboard').style.display = 'none';
+if(G.name)document.getElementById('player-name-input').value=G.name;
+document.querySelectorAll('.shop').forEach(s=>s.style.display='none');
+document.getElementById('shop-techniques').style.display='block';
+document.getElementById('leaderboard').style.display='none';
 renderShop('techniques');
+setSyncUI('idle');
 
-// Initial sync
-setSyncStatus('idle');
-if(state.playerName) {
-  setTimeout(syncPlayerToLeaderboard, 2000);
-}
+dbg('Игра запущена. API: '+BASE);
+dbg('Ключ (первые 10 символов): '+API_KEY.slice(0,10)+'...');
+if(G.name)setTimeout(syncToServer,3000);
 </script>
 </body>
 </html>
