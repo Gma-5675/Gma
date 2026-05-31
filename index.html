@@ -968,10 +968,6 @@ for(let i=0;i<15;i++){
 <div id="toast"></div>
 
 <script>
-const JSONBIN_KEY = '$2a$10$CRBxPFB.skpxAsvCrAWSTuni9G4E.agCBqG8iNqrQAPlEvDMUEwIW6a1bc89e21f9ee59d2a01028';
-const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
-const PLAYERS_BIN_KEY = 'cb_players_bin_id';
-
 // !! ПАРОЛЬ АДМИНИСТРАТОРА !!
 const ADMIN_PASSWORD = 'Глеб';
 
@@ -1033,7 +1029,6 @@ let currentTab = 'techniques';
 let adminAuthenticated = false;
 let selectedAdminPlayer = null;
 let allPlayers = [];
-let playersBinId = null;
 
 function fmt(n){
   n = Math.floor(n);
@@ -1053,70 +1048,20 @@ function generateId(){
   return 'p_'+Date.now()+'_'+Math.random().toString(36).substr(2,8);
 }
 
-async function getPlayersDb(){
-  let binId = localStorage.getItem(PLAYERS_BIN_KEY) || playersBinId;
-  if(!binId){
-    try{
-      setSyncStatus('syncing');
-      const res = await fetch(`${JSONBIN_BASE}/b`,{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'X-Master-Key': JSONBIN_KEY,
-          'X-Bin-Name':'CursedBattlePlayers',
-          'X-Bin-Private':'false',
-        },
-        body: JSON.stringify({players:{}})
-      });
-      if(!res.ok) throw new Error('create bin failed');
-      const data = await res.json();
-      binId = data.metadata.id;
-      localStorage.setItem(PLAYERS_BIN_KEY, binId);
-      playersBinId = binId;
-      setSyncStatus('synced');
-    }catch(e){
-      setSyncStatus('error');
-      console.error('DB create error:',e);
-      return null;
-    }
-  }
-  playersBinId = binId;
-  return binId;
-}
+const DB_KEY = 'cb_players_db';
 
 async function readDb(){
-  const binId = await getPlayersDb();
-  if(!binId) return null;
   try{
-    const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`,{
-      headers:{'X-Master-Key': JSONBIN_KEY}
-    });
-    if(!res.ok) throw new Error('read failed '+res.status);
-    const data = await res.json();
-    return data.record;
-  }catch(e){
-    console.error('DB read error:',e);
-    return null;
-  }
+    const data = JSON.parse(localStorage.getItem(DB_KEY));
+    return data || {players:{}};
+  }catch(e){ return {players:{}}; }
 }
 
 async function writeDb(record){
-  const binId = await getPlayersDb();
-  if(!binId) return false;
   try{
-    const res = await fetch(`${JSONBIN_BASE}/b/${binId}`,{
-      method:'PUT',
-      headers:{
-        'Content-Type':'application/json',
-        'X-Master-Key': JSONBIN_KEY,
-      },
-      body: JSON.stringify(record)
-    });
-    return res.ok;
-  }catch(e){
-    console.error('DB write error:',e);
-    return false;
-  }
+    localStorage.setItem(DB_KEY, JSON.stringify(record));
+    return true;
+  }catch(e){ return false; }
 }
 
 function getLocalState(){
@@ -1221,28 +1166,23 @@ function launchGame(){
 }
 
 let syncDebounce = null;
-let lastSyncMs = 0;
 
 function setSyncStatus(status){
   const dot = document.getElementById('sync-dot');
   const txt = document.getElementById('sync-text');
   if(!dot) return;
   switch(status){
-    case 'syncing': dot.style.background='#ffcc00'; dot.style.animation='syncPulse 0.8s ease-in-out infinite'; txt.textContent='синхр...'; break;
-    case 'synced':  dot.style.background='#00ff88'; dot.style.animation='none'; txt.textContent='синхр ✓'; break;
-    case 'error':   dot.style.background='#ff2244'; dot.style.animation='none'; txt.textContent='ошибка'; break;
-    default:        dot.style.background='#4a6b80'; dot.style.animation='none'; txt.textContent='локально'; break;
+    case 'syncing': dot.style.background='#00ff88'; dot.style.animation='none'; txt.textContent='локально'; break;
+    case 'synced':  dot.style.background='#00ff88'; dot.style.animation='none'; txt.textContent='локально ✓'; break;
+    case 'error':   dot.style.background='#00ff88'; dot.style.animation='none'; txt.textContent='локально'; break;
+    default:        dot.style.background='#00ff88'; dot.style.animation='none'; txt.textContent='локально'; break;
   }
 }
 
 async function syncToDb(){
   if(!state || !state.playerId) return;
-  const now = Date.now();
-  if(now - lastSyncMs < 15000) return;
-  lastSyncMs = now;
-  setSyncStatus('syncing');
   try{
-    const db = await readDb() || {players:{}};
+    const db = await readDb();
     if(!db.players) db.players = {};
     db.players[state.playerId] = {
       playerId: state.playerId,
@@ -1257,8 +1197,8 @@ async function syncToDb(){
       isAdmin: state.isAdmin || false,
       updatedAt: new Date().toISOString(),
     };
-    const ok = await writeDb(db);
-    setSyncStatus(ok ? 'synced' : 'error');
+    writeDb(db);
+    setSyncStatus('synced');
   }catch(e){
     setSyncStatus('error');
   }
