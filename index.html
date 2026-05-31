@@ -30,7 +30,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Animated background */
 body::before {
   content:'';
   position: fixed;
@@ -43,7 +42,6 @@ body::before {
   z-index: 0;
 }
 
-/* Floating particles */
 .particle {
   position: fixed;
   width: 2px; height: 2px;
@@ -107,7 +105,6 @@ body::before {
   color: white;
 }
 
-/* Energy display */
 #energy-row {
   display: flex;
   align-items: center;
@@ -140,25 +137,37 @@ body::before {
   margin-left: auto;
 }
 
-.stat-mini {
-  text-align: center;
-}
+.stat-mini { text-align: center; }
+.stat-mini .val { display: block; font-size: 1em; font-weight: 700; color: var(--green); }
+.stat-mini .lbl { font-size: 0.65em; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
 
-.stat-mini .val {
-  display: block;
-  font-size: 1em;
-  font-weight: 700;
-  color: var(--green);
-}
-
-.stat-mini .lbl {
+/* Sync indicator */
+#sync-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.65em;
   color: var(--muted);
   letter-spacing: 1px;
-  text-transform: uppercase;
+  margin-bottom: 6px;
 }
 
-/* Progress bar */
+#sync-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: background 0.3s;
+}
+
+#sync-dot.syncing { background: var(--gold); animation: syncPulse 0.8s ease-in-out infinite; }
+#sync-dot.synced { background: var(--green); }
+#sync-dot.error { background: var(--red); }
+
+@keyframes syncPulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
 #xp-bar-wrap {
   height: 4px;
   background: rgba(255,255,255,0.05);
@@ -191,6 +200,46 @@ body::before {
   gap: 12px;
 }
 
+/* Name input */
+#name-row {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#player-name-input {
+  flex: 1;
+  background: rgba(0,212,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: white;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9em;
+  font-weight: 700;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#player-name-input:focus { border-color: var(--accent); }
+
+#name-save-btn {
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  color: white;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85em;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: opacity 0.2s;
+}
+
+#name-save-btn:active { opacity: 0.7; }
+
 #quote-box {
   width: 100%;
   background: rgba(0,212,255,0.04);
@@ -212,7 +261,6 @@ body::before {
   font-weight: 700;
 }
 
-/* Main clicker orb */
 #orb-wrap {
   position: relative;
   width: 200px;
@@ -253,10 +301,7 @@ body::before {
   animation: orbSpin 4s linear infinite;
 }
 
-@keyframes orbSpin {
-  to { transform: rotate(360deg); }
-}
-
+@keyframes orbSpin { to { transform: rotate(360deg); } }
 @keyframes orbFloat {
   0%,100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
@@ -277,7 +322,6 @@ body::before {
   100% { transform: scale(1.1); opacity: 0; }
 }
 
-/* Click particles */
 .click-pop {
   position: absolute;
   pointer-events: none;
@@ -327,24 +371,11 @@ body::before {
   white-space: nowrap;
 }
 
-.tab-btn.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  background: rgba(0,212,255,0.05);
-}
-
-.tab-btn:hover:not(.active) {
-  color: var(--text);
-  background: rgba(255,255,255,0.03);
-}
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); background: rgba(0,212,255,0.05); }
+.tab-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.03); }
 
 /* ── SHOP ── */
-#shop {
-  padding: 12px;
-  display: none;
-}
-
-#shop.active { display: block; }
+.shop { padding: 12px; display: none; }
 
 .shop-section-title {
   font-family: 'Cinzel', serif;
@@ -390,11 +421,7 @@ body::before {
 .shop-card:hover { border-color: rgba(0,212,255,0.3); transform: translateY(-1px); }
 .shop-card:active { transform: scale(0.97); }
 
-.shop-card.cant-afford {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
+.shop-card.cant-afford { opacity: 0.5; cursor: not-allowed; }
 .shop-card.cant-afford:hover { transform: none; border-color: var(--border); }
 
 .rarity-badge {
@@ -414,53 +441,49 @@ body::before {
 .rarity-legendary { color: var(--gold); background: rgba(255,204,0,0.1); border: 1px solid var(--gold); }
 
 .shop-icon { font-size: 2em; margin-bottom: 4px; display: block; }
-
-.shop-name {
-  font-weight: 700;
-  font-size: 0.9em;
-  color: white;
-  margin-bottom: 2px;
-  line-height: 1.2;
-}
-
-.shop-bonus {
-  font-size: 0.8em;
-  color: var(--green);
-  margin-bottom: 6px;
-  font-weight: 700;
-}
-
-.shop-price {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.85em;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.shop-level-dots {
-  display: flex;
-  gap: 3px;
-  margin-top: 6px;
-}
-
-.dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
+.shop-name { font-weight: 700; font-size: 0.9em; color: white; margin-bottom: 2px; line-height: 1.2; }
+.shop-bonus { font-size: 0.8em; color: var(--green); margin-bottom: 6px; font-weight: 700; }
+.shop-price { display: flex; align-items: center; gap: 4px; font-size: 0.85em; font-weight: 700; color: var(--accent); }
+.shop-level-dots { display: flex; gap: 3px; margin-top: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
 .dot.filled { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 4px var(--accent); }
 
 /* ── LEADERBOARD ── */
-#leaderboard {
-  padding: 12px;
-  display: none;
+#leaderboard { padding: 12px; display: none; }
+
+.leader-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
 }
 
-#leaderboard.active { display: block; }
+.leader-header-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95em;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--gold);
+}
+
+#refresh-btn {
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 6px;
+  padding: 4px 10px;
+  color: var(--accent);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75em;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+}
+
+#refresh-btn:hover { background: rgba(0,212,255,0.2); }
+#refresh-btn:active { transform: scale(0.95); }
 
 .leader-row {
   display: flex;
@@ -489,23 +512,18 @@ body::before {
 .rank-2 { color: #aaa; }
 .rank-3 { color: #cd7f32; }
 
-.leader-name {
-  flex: 1;
-  font-size: 1em;
-  font-weight: 700;
-  color: white;
+.leader-name { flex: 1; font-size: 1em; font-weight: 700; color: white; }
+.leader-score { font-size: 0.95em; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 4px; }
+.leader-level { font-size: 0.7em; color: var(--muted); margin-top: 2px; }
+
+.leaders-loading {
+  text-align: center;
+  padding: 30px;
+  color: var(--muted);
+  font-size: 0.9em;
+  letter-spacing: 2px;
 }
 
-.leader-score {
-  font-size: 0.95em;
-  font-weight: 700;
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* ── FLOATING BTN ── */
 #tap-hint {
   text-align: center;
   font-size: 0.75em;
@@ -520,7 +538,6 @@ body::before {
   50% { opacity: 0.9; }
 }
 
-/* Toast */
 #toast {
   position: fixed;
   bottom: 90px;
@@ -541,12 +558,8 @@ body::before {
   white-space: nowrap;
 }
 
-#toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* Screen flash on buy */
 .screen-flash {
   position: fixed;
   inset: 0;
@@ -563,7 +576,6 @@ body::before {
 </head>
 <body>
 
-<!-- Particles -->
 <script>
 for(let i=0;i<15;i++){
   const p=document.createElement('div');
@@ -579,7 +591,7 @@ for(let i=0;i<15;i++){
   <div id="header">
     <div id="header-top">
       <div id="title">⚡ ПРОКЛЯТАЯ БИТВА</div>
-      <div id="level-badge" id="lvl-badge">УР.1 — УЧЕНИК</div>
+      <div id="level-badge">УР.1 — УЧЕНИК</div>
     </div>
     <div id="energy-row">
       <span id="energy-icon">🔮</span>
@@ -595,12 +607,22 @@ for(let i=0;i<15;i++){
         </div>
       </div>
     </div>
+    <div id="sync-indicator">
+      <div id="sync-dot"></div>
+      <span id="sync-text">не подключено</span>
+    </div>
     <div id="xp-bar-wrap"><div id="xp-bar" style="width:0%"></div></div>
     <div id="xp-text">0 / 500 до следующего уровня</div>
   </div>
 
   <!-- CLICKER -->
   <div id="clicker-area">
+
+    <div id="name-row">
+      <input id="player-name-input" type="text" maxlength="20" placeholder="Твоё имя для топов..." />
+      <button id="name-save-btn" onclick="saveName()">СОХРАНИТЬ</button>
+    </div>
+
     <div id="quote-box">
       <div id="quote-text">Проклятая энергия исходит из негативных эмоций людей...</div>
       <div class="quote-author" id="quote-author">— Сатору Годжо</div>
@@ -616,14 +638,14 @@ for(let i=0;i<15;i++){
 
   <!-- TABS -->
   <div id="tabs">
-    <button class="tab-btn active" onclick="switchTab('techniques')">⚔️ Техники</button>
-    <button class="tab-btn" onclick="switchTab('curses')">👁 Проклятья</button>
-    <button class="tab-btn" onclick="switchTab('items')">🗡 Артефакты</button>
-    <button class="tab-btn" onclick="switchTab('leaders')">🏆 Топы</button>
+    <button class="tab-btn active" onclick="switchTab('techniques', this)">⚔️ Техники</button>
+    <button class="tab-btn" onclick="switchTab('curses', this)">👁 Проклятья</button>
+    <button class="tab-btn" onclick="switchTab('items', this)">🗡 Артефакты</button>
+    <button class="tab-btn" onclick="switchTab('leaders', this)">🏆 Топы</button>
   </div>
 
   <!-- SHOP: Techniques -->
-  <div id="shop-techniques" class="shop active" id="shop">
+  <div id="shop-techniques" class="shop">
     <div class="shop-section-title" style="color:var(--accent)">⚔️ Боевые техники</div>
     <div class="shop-grid" id="grid-techniques"></div>
   </div>
@@ -642,8 +664,11 @@ for(let i=0;i<15;i++){
 
   <!-- LEADERBOARD -->
   <div id="leaderboard">
-    <div class="shop-section-title" style="color:var(--gold)">🏆 Топы</div>
-    <div id="leaders-list"></div>
+    <div class="leader-header">
+      <div class="leader-header-title">🏆 Топы</div>
+      <button id="refresh-btn" onclick="loadLeaderboard()">↻ ОБНОВИТЬ</button>
+    </div>
+    <div id="leaders-list"><div class="leaders-loading">Загрузка...</div></div>
   </div>
 
 </div>
@@ -651,9 +676,18 @@ for(let i=0;i<15;i++){
 <div id="toast"></div>
 
 <script>
-// ── GAME STATE ──
-const SAVE_KEY = 'cursed_clicker_v1';
+// ══════════════════════════════════════
+//  JSONBIN.IO CONFIG
+// ══════════════════════════════════════
+const JSONBIN_API_KEY = '$2a$10$CRBxPFB.skpxAsvCrAWSTuni9G4E.agCBqG8iNqrQAPlEvDMUEwIW6a1bc89e21f9ee59d2a01028';
+// Bin ID для лидерборда (создаётся автоматически при первом запуске)
+const LEADERBOARD_BIN_ID_KEY = 'cursed_lb_bin_id';
+const SAVE_KEY = 'cursed_clicker_v2';
+const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
 
+// ══════════════════════════════════════
+//  GAME DATA
+// ══════════════════════════════════════
 const LEVELS = [
   {name:'Ученик', xp:500},
   {name:'Помощник', xp:2000},
@@ -699,9 +733,14 @@ const UPGRADES = {
   ],
 };
 
-const FAKE_LEADERS = [];
-
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
 let state = loadState();
+let currentTab = 'techniques';
+let syncStatus = 'idle'; // idle | syncing | synced | error
+let lastSyncTime = 0;
+let syncDebounceTimer = null;
 
 function defaultState() {
   return {
@@ -709,6 +748,8 @@ function defaultState() {
     totalEnergy: 0,
     level: 0,
     owned: {},
+    playerName: '',
+    playerId: 'player_' + Math.random().toString(36).substr(2, 9),
     lastTime: Date.now(),
   };
 }
@@ -716,15 +757,230 @@ function defaultState() {
 function loadState() {
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY));
+    if(s && !s.playerId) s.playerId = 'player_' + Math.random().toString(36).substr(2, 9);
     return s || defaultState();
   } catch(e) { return defaultState(); }
 }
 
 function saveState() {
+  state.lastTime = Date.now();
   localStorage.setItem(SAVE_KEY, JSON.stringify(state));
 }
 
-// ── COMPUTED ──
+// ══════════════════════════════════════
+//  JSONBIN API
+// ══════════════════════════════════════
+
+function setSyncStatus(status) {
+  syncStatus = status;
+  const dot = document.getElementById('sync-dot');
+  const text = document.getElementById('sync-text');
+  dot.className = 'sync-dot';
+
+  switch(status) {
+    case 'syncing':
+      dot.id = 'sync-dot';
+      dot.className = '';
+      dot.setAttribute('id', 'sync-dot');
+      dot.style.background = '#ffcc00';
+      dot.style.animation = 'syncPulse 0.8s ease-in-out infinite';
+      text.textContent = 'синхронизация...';
+      break;
+    case 'synced':
+      dot.style.background = '#00ff88';
+      dot.style.animation = 'none';
+      text.textContent = 'синхронизировано ✓';
+      break;
+    case 'error':
+      dot.style.background = '#ff2244';
+      dot.style.animation = 'none';
+      text.textContent = 'ошибка сервера';
+      break;
+    default:
+      dot.style.background = '#4a6b80';
+      dot.style.animation = 'none';
+      text.textContent = 'локально';
+  }
+}
+
+// Get or create the leaderboard bin
+async function getOrCreateLeaderboardBin() {
+  let binId = localStorage.getItem(LEADERBOARD_BIN_ID_KEY);
+
+  if(binId) return binId;
+
+  // Create new bin
+  try {
+    setSyncStatus('syncing');
+    const res = await fetch(`${JSONBIN_BASE}/b`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_API_KEY,
+        'X-Bin-Name': 'CursedBattleLeaderboard',
+        'X-Bin-Private': 'false',
+      },
+      body: JSON.stringify({ players: [] })
+    });
+
+    if(!res.ok) throw new Error('Create bin failed');
+
+    const data = await res.json();
+    binId = data.metadata.id;
+    localStorage.setItem(LEADERBOARD_BIN_ID_KEY, binId);
+    setSyncStatus('synced');
+    return binId;
+  } catch(e) {
+    setSyncStatus('error');
+    console.error('JSONBin create error:', e);
+    return null;
+  }
+}
+
+// Upload player score to leaderboard
+async function syncPlayerToLeaderboard() {
+  if(!state.playerName || state.totalEnergy < 1) return;
+
+  // Debounce — don't sync more than once per 30 sec
+  const now = Date.now();
+  if(now - lastSyncTime < 30000) {
+    clearTimeout(syncDebounceTimer);
+    syncDebounceTimer = setTimeout(syncPlayerToLeaderboard, 30000 - (now - lastSyncTime));
+    return;
+  }
+
+  lastSyncTime = now;
+
+  try {
+    setSyncStatus('syncing');
+    const binId = await getOrCreateLeaderboardBin();
+    if(!binId) return;
+
+    // Read current leaderboard
+    const readRes = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': JSONBIN_API_KEY }
+    });
+
+    if(!readRes.ok) throw new Error('Read failed');
+    const readData = await readRes.json();
+    let players = readData.record.players || [];
+
+    // Update or insert this player
+    const idx = players.findIndex(p => p.id === state.playerId);
+    const playerEntry = {
+      id: state.playerId,
+      name: state.playerName,
+      score: Math.floor(state.totalEnergy),
+      level: state.level + 1,
+      levelName: LEVELS[state.level].name,
+      updatedAt: new Date().toISOString(),
+    };
+
+    if(idx >= 0) {
+      players[idx] = playerEntry;
+    } else {
+      players.push(playerEntry);
+    }
+
+    // Keep top 100 players only
+    players.sort((a,b) => b.score - a.score);
+    if(players.length > 100) players = players.slice(0, 100);
+
+    // Write back
+    const writeRes = await fetch(`${JSONBIN_BASE}/b/${binId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_API_KEY,
+      },
+      body: JSON.stringify({ players })
+    });
+
+    if(!writeRes.ok) throw new Error('Write failed');
+
+    setSyncStatus('synced');
+  } catch(e) {
+    setSyncStatus('error');
+    console.error('JSONBin sync error:', e);
+  }
+}
+
+// Load leaderboard from server
+async function loadLeaderboard() {
+  const list = document.getElementById('leaders-list');
+  list.innerHTML = '<div class="leaders-loading">⏳ Загрузка с сервера...</div>';
+
+  try {
+    const binId = await getOrCreateLeaderboardBin();
+    if(!binId) throw new Error('No bin');
+
+    const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': JSONBIN_API_KEY }
+    });
+
+    if(!res.ok) throw new Error('Load failed');
+    const data = await res.json();
+    const players = (data.record.players || []).sort((a,b) => b.score - a.score);
+
+    renderLeaderboard(players);
+    setSyncStatus('synced');
+  } catch(e) {
+    setSyncStatus('error');
+    list.innerHTML = '<div class="leaders-loading" style="color:var(--red)">❌ Ошибка загрузки. Проверьте интернет.</div>';
+    console.error('JSONBin load error:', e);
+  }
+}
+
+function renderLeaderboard(players) {
+  const list = document.getElementById('leaders-list');
+
+  // Add current player if not in list
+  let combined = [...players];
+  const myIdx = combined.findIndex(p => p.id === state.playerId);
+
+  // If player has a name and score, make sure they appear
+  if(myIdx < 0 && state.playerName && state.totalEnergy > 0) {
+    combined.push({
+      id: state.playerId,
+      name: state.playerName + ' (ты)',
+      score: Math.floor(state.totalEnergy),
+      level: state.level + 1,
+      levelName: LEVELS[state.level].name,
+      isYou: true,
+    });
+    combined.sort((a,b) => b.score - a.score);
+  }
+
+  if(combined.length === 0) {
+    list.innerHTML = '<div class="leaders-loading">Нет игроков. Будь первым! 🏆</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  combined.forEach((p, i) => {
+    const isYou = p.id === state.playerId || p.isYou;
+    const row = document.createElement('div');
+    row.className = 'leader-row' + (isYou ? ' is-you' : '');
+    const rankIcons = ['🥇','🥈','🥉'];
+    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    row.innerHTML = `
+      <div class="leader-rank ${rankClass}">${rankIcons[i] || '#'+(i+1)}</div>
+      <div>
+        <div class="leader-name">${escapeHtml(p.name)}${isYou ? ' 👤' : ''}</div>
+        <div class="leader-level">УР.${p.level || 1} — ${p.levelName || 'Ученик'}</div>
+      </div>
+      <div class="leader-score">🔮 ${fmt(p.score)}</div>`;
+    list.appendChild(row);
+  });
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ══════════════════════════════════════
+//  COMPUTED
+// ══════════════════════════════════════
 function getTapPower() {
   let base = 1;
   forEachUpgrade((up, lvl) => { base += up.perTap * lvl; });
@@ -751,7 +1007,9 @@ function getCost(up) {
   return Math.floor(up.baseCost * Math.pow(1.6, lvl));
 }
 
-// ── UI ──
+// ══════════════════════════════════════
+//  UI
+// ══════════════════════════════════════
 function fmt(n) {
   if(n >= 1e9) return (n/1e9).toFixed(1)+'B';
   if(n >= 1e6) return (n/1e6).toFixed(1)+'M';
@@ -764,18 +1022,12 @@ function updateHeader() {
   document.getElementById('stat-tap').textContent = '+'+fmt(getTapPower());
   document.getElementById('stat-ps').textContent = fmt(getPerSecond())+'/с';
 
-  // Level
-  let lvl = state.level;
-  const L = LEVELS[lvl];
-  const prev = lvl > 0 ? LEVELS[lvl-1].xp : 0;
-  const xpNeeded = L.xp;
-  const progress = Math.min(100, (state.totalEnergy / xpNeeded) * 100);
-
-  // Level up?
   while(state.level < LEVELS.length - 1 && state.totalEnergy >= LEVELS[state.level].xp) {
     state.level++;
     showToast('⚡ НОВЫЙ УРОВЕНЬ: ' + LEVELS[state.level].name.toUpperCase());
     updateOrb();
+    // Sync new level to server
+    debouncedSync();
   }
 
   const curLevel = LEVELS[state.level];
@@ -787,7 +1039,6 @@ function updateHeader() {
 const ORB_EMOJIS = ['💀','⚡','👁','🔮','💜','🌀','♾️'];
 function updateOrb() {
   const idx = Math.min(state.level, ORB_EMOJIS.length-1);
-  document.getElementById('orb').childNodes[0] && (document.getElementById('orb').childNodes[0].textContent='');
   document.getElementById('orb').textContent = ORB_EMOJIS[idx];
 }
 
@@ -809,8 +1060,10 @@ function renderShop(cat) {
     if(up.perSec) bonusParts.push('+'+up.perSec*(lvl+1)+'/сек');
     if(up.perTap) bonusParts.push('+'+up.perTap*(lvl+1)+' тап');
 
+    const rarityLabels = {common:'ОБЫЧНАЯ',rare:'РЕДКАЯ',epic:'ЭПИЧЕСКАЯ',legendary:'ЛЕГЕНДАРНАЯ'};
+
     card.innerHTML = `
-      <span class="rarity-badge rarity-${up.rarity}">${{common:'ОБЫЧНАЯ',rare:'РЕДКАЯ',epic:'ЭПИЧЕСКАЯ',legendary:'ЛЕГЕНДАРНАЯ'}[up.rarity]}</span>
+      <span class="rarity-badge rarity-${up.rarity}">${rarityLabels[up.rarity]}</span>
       <span class="shop-icon">${up.icon}</span>
       <div class="shop-name">${up.name}</div>
       <div class="shop-bonus">${bonusParts.join(' ')}</div>
@@ -825,41 +1078,16 @@ function renderShop(cat) {
   }
 }
 
-function renderLeaders() {
-  const list = document.getElementById('leaders-list');
-  const yourScore = state.totalEnergy;
-  const all = [...FAKE_LEADERS, {name:'Ты 👤', score: yourScore, isYou:true}]
-    .sort((a,b)=>b.score-a.score);
+// ══════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════
+let syncTickCounter = 0;
 
-  list.innerHTML = '';
-  all.forEach((l, i) => {
-    const row = document.createElement('div');
-    row.className = 'leader-row' + (l.isYou ? ' is-you' : '');
-    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
-    row.innerHTML = `
-      <div class="leader-rank ${rankClass}">${['🥇','🥈','🥉'][i]||'#'+(i+1)}</div>
-      <div class="leader-name">${l.name}</div>
-      <div class="leader-score">🔮 ${fmt(l.score)}</div>`;
-    list.appendChild(row);
-  });
-}
-
-function renderAll() {
-  updateHeader();
-  renderShop('techniques');
-  renderShop('curses');
-  renderShop('items');
-  renderLeaders();
-}
-
-// ── ACTIONS ──
 function handleTap(e) {
-  if(state.gameOver) return;
   const power = getTapPower();
   state.energy += power;
   state.totalEnergy += power;
 
-  // Pop effect
   const wrap = document.getElementById('orb-wrap');
   const rect = wrap.getBoundingClientRect();
   const cx = e.touches ? e.touches[0].clientX : e.clientX;
@@ -873,9 +1101,14 @@ function handleTap(e) {
   setTimeout(() => pop.remove(), 900);
 
   updateHeader();
-  // Re-render shop affordability
-  const activeTab = document.querySelector('.tab-btn.active').getAttribute('onclick').match(/'(\w+)'/)[1];
-  if(activeTab !== 'leaders') renderShop(activeTab);
+  if(currentTab !== 'leaders') renderShop(currentTab);
+
+  // Sync every 50 taps
+  syncTickCounter++;
+  if(syncTickCounter >= 50) {
+    syncTickCounter = 0;
+    debouncedSync();
+  }
 }
 
 function buyUpgrade(id, cat) {
@@ -889,34 +1122,50 @@ function buyUpgrade(id, cat) {
   state.energy -= cost;
   state.owned[id] = lvl + 1;
 
-  // Flash
   const flash = document.createElement('div');
   flash.className = 'screen-flash';
   document.body.appendChild(flash);
   setTimeout(() => flash.remove(), 400);
 
   showToast('✅ '+up.name+' улучшено!');
-  renderAll();
+  renderShop(cat);
+  updateHeader();
   saveState();
+  debouncedSync();
+}
+
+function saveName() {
+  const input = document.getElementById('player-name-input');
+  const name = input.value.trim();
+  if(!name) { showToast('⚠️ Введи имя!'); return; }
+  state.playerName = name;
+  saveState();
+  showToast('👤 Имя сохранено: ' + name);
+  debouncedSync();
 }
 
 // Tab switching
-function switchTab(tab) {
+function switchTab(tab, btn) {
+  currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.shop, #leaderboard').forEach(s => {
-    s.classList.remove('active');
-    s.style.display = 'none';
-  });
+  document.querySelectorAll('.shop, #leaderboard').forEach(s => s.style.display = 'none');
 
-  event.target.classList.add('active');
+  if(btn) btn.classList.add('active');
 
   if(tab === 'leaders') {
     document.getElementById('leaderboard').style.display = 'block';
-    renderLeaders();
+    loadLeaderboard();
   } else {
     const el = document.getElementById('shop-'+tab);
     if(el) { el.style.display = 'block'; renderShop(tab); }
   }
+}
+
+// Debounced server sync
+let syncTimer = null;
+function debouncedSync() {
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncPlayerToLeaderboard, 5000);
 }
 
 // Toast
@@ -929,7 +1178,9 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-// Passive income
+// ══════════════════════════════════════
+//  PASSIVE & INTERVALS
+// ══════════════════════════════════════
 setInterval(() => {
   const ps = getPerSecond();
   if(ps > 0) {
@@ -939,6 +1190,11 @@ setInterval(() => {
   }
   saveState();
 }, 100);
+
+// Auto-sync every 2 minutes
+setInterval(() => {
+  if(state.playerName) syncPlayerToLeaderboard();
+}, 120000);
 
 // Offline income
 const offlineMs = Date.now() - (state.lastTime || Date.now());
@@ -961,13 +1217,28 @@ setInterval(() => {
   document.getElementById('quote-author').textContent = QUOTES[quoteIdx][1];
 }, 8000);
 
-// Init
+// ══════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════
 updateOrb();
-renderAll();
-// Show first tab correctly
+updateHeader();
+
+// Restore player name
+if(state.playerName) {
+  document.getElementById('player-name-input').value = state.playerName;
+}
+
+// Show first tab
 document.querySelectorAll('.shop').forEach(s => s.style.display = 'none');
 document.getElementById('shop-techniques').style.display = 'block';
 document.getElementById('leaderboard').style.display = 'none';
+renderShop('techniques');
+
+// Initial sync
+setSyncStatus('idle');
+if(state.playerName) {
+  setTimeout(syncPlayerToLeaderboard, 2000);
+}
 </script>
 </body>
 </html>
